@@ -3,58 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>刘老哥精品渔具</title>
+    <title>座位表 - 48座</title>
     <style>
-        body {
-            font-family: "Microsoft YaHei", Arial, sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 100vh;
+        * {
             margin: 0;
-            padding: 40px 20px;
+            padding: 0;
             box-sizing: border-box;
         }
-        .header {
-            text-align: center;
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .slogan {
+
+        h1 {
+            color: #fff;
             font-size: 32px;
-            font-weight: bold;
-            color: #d32f2f;
             margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: 4px;
         }
-        .contact {
-            font-size: 20px;
-            color: #555;
+
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 16px;
+            max-width: 1100px;
+            width: 100%;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
-        .footer {
+
+        .seat {
+            background: #fff;
+            border-radius: 12px;
+            padding: 18px 10px;
             text-align: center;
-            border-top: 1px solid #ddd;
-            padding-top: 20px;
-            font-size: 14px;
-            color: #777;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
-        .brand-name {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
+
+        .seat::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
-        .copyright {
+
+        .seat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .seat:hover::before {
+            transform: scaleX(1);
+        }
+
+        .seat-number {
             font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .seat-name {
+            font-size: 16px;
+            color: #333;
+            min-height: 24px;
+            line-height: 24px;
+            outline: none;
+            border-bottom: 2px dashed transparent;
+            padding-bottom: 4px;
+            transition: border-color 0.3s;
+        }
+
+        .seat-name:focus {
+            border-bottom-color: #667eea;
+        }
+
+        .seat-name:empty::before {
+            content: "（ ）";
+            color: #ccc;
+        }
+
+        .seat-name:not(:empty)::before {
+            content: "";
+        }
+
+        /* 为已填写名字的座位添加标记 */
+        .seat.occupied {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+        }
+
+        .seat.occupied .seat-name {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .hint {
+            margin-top: 25px;
+            color: rgba(255,255,255,0.8);
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .btn-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-clear {
+            background: #fff;
+            color: #764ba2;
+        }
+
+        .btn-clear:hover {
+            background: #f0f0f0;
+        }
+
+        .btn-save {
+            background: #fff;
+            color: #667eea;
+        }
+
+        .btn-save:hover {
+            background: #f0f0f0;
+        }
+
+        @media (max-width: 900px) {
+            .seat-grid {
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: repeat(12, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .seat-grid {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(16, 1fr);
+            }
+            h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="slogan">做好渔网服务大众</div>
-        <div class="contact">联系电话：15563003758 或 13589413279</div>
+    <h1>座 位 表</h1>
+    <div class="seat-grid" id="seatGrid">
+        <!-- 座位将通过JavaScript生成 -->
     </div>
-    <div class="footer">
-        <div class="brand-name">刘老哥精品渔具<sup></sup></div>
-        <div class="copyright">&copy; 2026 伪造者必究</div>
+    <div class="hint">点击括号即可填写或修改名字</div>
+    <div class="btn-group">
+        <button class="btn btn-save" onclick="saveSeats()">保存座位表</button>
+        <button class="btn btn-clear" onclick="clearSeats()">清空所有名字</button>
     </div>
+
+    <script>
+        const seatGrid = document.getElementById('seatGrid');
+        const TOTAL_SEATS = 48;
+        const COLS = 8;
+        const ROWS = 6;
+
+        // 初始化座位
+        function initSeats() {
+            // 尝试从localStorage加载已保存的数据
+            const savedData = JSON.parse(localStorage.getItem('seatData') || '{}');
+
+            for (let i = 1; i <= TOTAL_SEATS; i++) {
+                const seat = document.createElement('div');
+                seat.className = 'seat';
+                seat.dataset.seatId = i;
+
+                const seatNumber = document.createElement('div');
+                seatNumber.className = 'seat-number';
+                seatNumber.textContent = '第 ' + i + ' 座';
+
+                const seatName = document.createElement('div');
+                seatName.className = 'seat-name';
+                seatName.contentEditable = true;
+                seatName.dataset.seatId = i;
+                
+                // 加载已保存的名字
+                if (savedData[i]) {
+                    seatName.textContent = savedData[i];
+                    seat.classList.add('occupied');
+                }
+
+                // 监听输入事件，自动保存
+                seatName.addEventListener('input', function() {
+                    if (this.textContent.trim()) {
+                        seat.classList.add('occupied');
+                    } else {
+                        seat.classList.remove('occupied');
+                    }
+                    autoSave();
+                });
+
+                // 防止回车换行
+                seatName.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.blur();
+                    }
+                });
+
+                seat.appendChild(seatNumber);
+                seat.appendChild(seatName);
+                seatGrid.appendChild(seat);
+            }
+        }
+
+        // 自动保存到localStorage
+        function autoSave() {
+            const data = {};
+            document.querySelectorAll('.seat-name').forEach(el => {
+                const id = el.dataset.seatId;
+                const name = el.textContent.trim();
+                if (name) {
+                    data[id] = name;
+                }
+            });
+            localStorage.setItem('seatData', JSON.stringify(data));
+        }
+
+        // 手动保存并提示
+        function saveSeats() {
+            autoSave();
+            alert('座位表已保存成功！');
+        }
+
+        // 清空所有名字
+        function clearSeats() {
+            if (confirm('确定要清空所有名字吗？此操作不可恢复。')) {
+                document.querySelectorAll('.seat-name').forEach(el => {
+                    el.textContent = '';
+                    el.parentElement.classList.remove('occupied');
+                });
+                localStorage.removeItem('seatData');
+                alert('已清空所有名字');
+            }
+        }
+
+        // 页面加载时初始化
+        window.addEventListener('DOMContentLoaded', initSeats);
+    </script>
 </body>
 </html>
